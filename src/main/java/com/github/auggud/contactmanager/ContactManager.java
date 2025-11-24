@@ -1,9 +1,6 @@
 package com.github.auggud.contactmanager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ContactManager {
     //store contacts (in a Map)
@@ -43,5 +40,25 @@ public class ContactManager {
     // get all contacts
     public List<Contact> getAllContacts() {
         return new ArrayList<>(contacts.values());
+    }
+
+    // search
+    public List<Contact> searchByName(String query) {
+        List<Contact> results = new ArrayList<>();
+
+        for (Contact contact : contacts.values()) {
+            if (contact.getName().toLowerCase().contains(query.toLowerCase())) {
+                results.add(contact);
+            }
+        }
+        return results;
+    }
+
+    // sort alphabetically
+    public List<Contact> getContactsByName() {
+        List<Contact> results = getAllContacts();
+        results.sort(Comparator.comparing(Contact::getName));
+
+        return results;
     }
 }
