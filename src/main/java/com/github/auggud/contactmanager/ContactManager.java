@@ -1,9 +1,7 @@
 package com.github.auggud.contactmanager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.naming.InvalidNameException;
+import java.util.*;
 
 public class ContactManager {
     //store contacts (in a Map)
@@ -12,9 +10,31 @@ public class ContactManager {
 
     //add contact
     public Contact addContact(String name, String email, String phone, String address) {
+        if(!ContactValidator.isValidName(name)){
+            throw new InvalidContactException("Name is invalid");
+        }
+        if(!ContactValidator.isValidEmail(email)){
+            throw new InvalidContactException("Email is invalid");
+        }
+        if(!ContactValidator.isValidPhone(phone)){
+            throw new InvalidContactException("Phone number is invalid");
+        }
+        if(emailAlreadyExists(email)){
+            throw new InvalidContactException("Email already exists");
+        }
+
         Contact contact = new Contact(nextId++, name, email, phone, address);
         contacts.put(contact.getId(), contact);
         return contact;
+    }
+
+    private boolean emailAlreadyExists(String email){
+        for(Contact contact : contacts.values()){
+            if(contact.getEmail().equalsIgnoreCase(email)){
+                return true;
+            }
+        }
+        return false;
     }
 
     //get contact by id
@@ -43,5 +63,25 @@ public class ContactManager {
     // get all contacts
     public List<Contact> getAllContacts() {
         return new ArrayList<>(contacts.values());
+    }
+
+    // search
+    public List<Contact> searchByName(String query) {
+        List<Contact> results = new ArrayList<>();
+
+        for (Contact contact : contacts.values()) {
+            if (contact.getName().toLowerCase().contains(query.toLowerCase())) {
+                results.add(contact);
+            }
+        }
+        return results;
+    }
+
+    // sort alphabetically
+    public List<Contact> getContactsByName() {
+        List<Contact> results = getAllContacts();
+        results.sort(Comparator.comparing(Contact::getName));
+
+        return results;
     }
 }
