@@ -1,6 +1,5 @@
 package com.github.auggud.contactmanager;
 
-import javax.naming.InvalidNameException;
 import java.util.*;
 
 public class ContactManager {
@@ -78,7 +77,7 @@ public class ContactManager {
     }
 
     // sort alphabetically
-    public List<Contact> getContactsByName() {
+    public List<Contact> sortContactsByName() {
         List<Contact> results = getAllContacts();
         results.sort(Comparator.comparing(Contact::getName));
 
